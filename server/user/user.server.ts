@@ -14,6 +14,6 @@ export const createUser = async (userDetails : RegistrationDetails) => {
         return { msg : "Succesfully Added ", status : 201 };
     }
     catch(error){
-        return { msg : error , status : 401 }
+        return { msg : "User already exists or invalid inputs." , status : 401 }
     }
 }

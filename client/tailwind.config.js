@@ -7,7 +7,7 @@ export default {
   theme: {
     screens:{
       'xs' : '300px',
-      'sm' : '400px',
+      'sm' : '450px',
       'md' : '700px',
       'lg' : '1100px',
       'xl' : '1900px',
@@ -31,12 +31,12 @@ export default {
           '1%': { transform: 'translateX(1vw)'},
           '100%': { transform: 'translateX(0vw)'},
         },
+        
       },
       animation: {
         slideIn : '1s ease-out 0s 1 slideIn',
         slideOut : '1s ease-out 0s 1 slideOut',
         slideOutFloatingLabel : '1s ease-out 0s 1 slideOutFloatingLabel',
-        
       }
     }
   },

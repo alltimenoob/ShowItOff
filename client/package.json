@@ -10,10 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@apollo/client": "^3.8.8",
     "@types/axios": "^0.14.0",
+    "@types/dom-to-image": "^2.6.7",
     "autoprefixer": "^10.4.16",
     "axios": "^1.6.3",
+    "dom-to-image": "^2.6.0",
     "global": "^4.4.0",
+    "graphql": "^16.8.1",
     "postcss": "^8.4.31",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
