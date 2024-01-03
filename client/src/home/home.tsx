@@ -15,7 +15,7 @@ const GET_DOCUMENTS = gql`
   }
 `
 
-const MenuContext = createContext({ openMenu : '', setOpenMenu : ()=>{}})
+const MenuContext = createContext({ openMenu : '', setOpenMenu : (_ : string)=>{}})
 export {MenuContext}
 export default function Home() {
   const navigate = useNavigate()
