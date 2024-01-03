@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken"
 
 const typeDefs = `
     type Document {
+        id : String
         title : String
         email : String
         filename : String

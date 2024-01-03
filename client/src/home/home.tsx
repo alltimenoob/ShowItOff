@@ -1,19 +1,25 @@
 import { useNavigate } from "react-router-dom"
 import { gql, useQuery } from "@apollo/client"
 import DocumentGrid from "../components/document.grid."
-import { useEffect } from "react"
+import { createContext, useEffect,useState } from "react"
+
+
 
 const GET_DOCUMENTS = gql`
   query GetDocuments($email: String) {
     getDocuments(email: $email) {
+      id
       title
       preview
     }
   }
 `
 
+const MenuContext = createContext({ openMenu : '', setOpenMenu : ()=>{}})
+export {MenuContext}
 export default function Home() {
   const navigate = useNavigate()
+  const [openMenu , setOpenMenu] = useState<string>('');
   const { loading, error, data, refetch } = useQuery(GET_DOCUMENTS, {
     variables: { email: localStorage.getItem("email") as string },
     context: {
@@ -56,7 +62,9 @@ export default function Home() {
       </form>
 
       <section className='grid lg:grid-cols-8 md:grid-cols-6 sm:grid-cols-4 grid-cols-2 justify-items-center items-center gap-3 min-w-[300px]'>
-        {<DocumentGrid loading={loading} error={error} data={data} />}
+        <MenuContext.Provider value={{openMenu,setOpenMenu}}>
+          {<DocumentGrid loading={loading} error={error} data={data} />}
+        </MenuContext.Provider>
       </section>
     </div>
   )

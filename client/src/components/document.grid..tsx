@@ -9,7 +9,7 @@ export default function DocumentGrid({ loading, error, data }: any) {
   if (data)
     return data.getDocuments.map((document: any, index: number) => {
       return (
-        <DocumentCard key={index} document={{ title: document.title, preview: document.preview }} />
+        <DocumentCard key={index} document={{ title: document.title, preview: document.preview ,id : document.id}}  />
       )
     })
 }
