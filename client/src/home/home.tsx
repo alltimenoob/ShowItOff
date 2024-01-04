@@ -1,9 +1,8 @@
 import { useNavigate } from "react-router-dom"
 import { gql, useQuery } from "@apollo/client"
 import DocumentGrid from "../components/document.grid."
-import { createContext, useEffect,useState } from "react"
-
-
+import { Dispatch, SetStateAction, createContext, useEffect, useState } from "react"
+import ShareDocument from "../components/share.document"
 
 const GET_DOCUMENTS = gql`
   query GetDocuments($email: String) {
@@ -11,15 +10,32 @@ const GET_DOCUMENTS = gql`
       id
       title
       preview
+      filename
     }
   }
 `
+export type Document = {
+  id: string
+  title: string
+  preview: string
+  filename: string
+}
 
-const MenuContext = createContext({ openMenu : '', setOpenMenu : (_ : string)=>{}})
-export {MenuContext}
+type MenuContextType = {
+  openMenu: Document | undefined
+  setOpenMenu: Dispatch<SetStateAction<Document | undefined>>
+  sharePopup: boolean
+  setSharePopup: Dispatch<SetStateAction<boolean>>
+}
+
+const MenuContext = createContext<MenuContextType | null>(null)
+export { MenuContext }
+
 export default function Home() {
   const navigate = useNavigate()
-  const [openMenu , setOpenMenu] = useState<string>('');
+  const [openMenu, setOpenMenu] = useState<Document | undefined>(undefined)
+  const [sharePopup, setSharePopup] = useState<boolean>(false)
+
   const { loading, error, data, refetch } = useQuery(GET_DOCUMENTS, {
     variables: { email: localStorage.getItem("email") as string },
     context: {
@@ -62,8 +78,9 @@ export default function Home() {
       </form>
 
       <section className='grid lg:grid-cols-8 md:grid-cols-6 sm:grid-cols-4 grid-cols-2 justify-items-center items-center gap-3 min-w-[300px]'>
-        <MenuContext.Provider value={{openMenu,setOpenMenu}}>
+        <MenuContext.Provider value={{ openMenu, setOpenMenu, sharePopup, setSharePopup }}>
           {<DocumentGrid loading={loading} error={error} data={data} />}
+          <ShareDocument />
         </MenuContext.Provider>
       </section>
     </div>

@@ -3,6 +3,7 @@ import { ApolloServer } from "@apollo/server"
 import { startStandaloneServer } from "@apollo/server/standalone"
 import { GraphQLError } from "graphql"
 import jwt from "jsonwebtoken"
+import { MyContext } from "../types.server"
 
 const typeDefs = `
     type Document {
@@ -28,14 +29,6 @@ const resolvers = {
       return await fetchDocuments(email as string)
     } ,
   },
-}
-
-interface UserInterface {
-  email : string
-}
-
-interface MyContext {
-  user : UserInterface;
 }
 
 let apolloServer = new ApolloServer<MyContext>({

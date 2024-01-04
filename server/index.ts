@@ -5,7 +5,8 @@ import { startMongoose } from "./mongoose/mongoose.config"
 import { validateJWT } from "./authentication/jwt.validate"
 import upload from "./filehandling/upload.instance"
 import { createDocument } from "./document/document.server"
-import './graphql/graphql.server'
+import "./graphql/graphql.server"
+import shareDocument from "./mailer/share.document"
 
 const express = require("express")
 const app = express()
@@ -46,12 +47,11 @@ app.post("/login", (req: Request, res: Response) => {
   })
 })
 
-
 app.post("/upload", [validateJWT, upload.single("file")], async (req: any, res: Response) => {
   await createDocument({
     email: req.user.email,
     title: req.body.title,
-    filename: Date.now() + "-" + req.body.filename,
+    filename: req.file.filename,
     preview: req.body.preview,
     tags: null,
   }).then((response) => {
@@ -61,6 +61,18 @@ app.post("/upload", [validateJWT, upload.single("file")], async (req: any, res: 
 
 app.get("/validate-user", validateJWT, (_: Request, res: Response) => {
   res.status(200).send()
+})
+
+app.post("/share", validateJWT, async (req: Request, res: Response) => {
+  if (!req.body || !req.body.id || !req.body.recipient)
+    return res.status(200).send({ msg: "Incorrect infromation", status: 400 })
+
+  const message = await shareDocument({
+    id: req.body.id,
+    recipient: req.body.recipient,
+  })
+    
+  res.status(200).send(message)
 })
 
 const port = process.env.PORT
