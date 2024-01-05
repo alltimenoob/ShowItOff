@@ -46,13 +46,13 @@ export default function Login() {
             localStorage.setItem("token", response.data.token)
             navigate("/home")
             break
-          case 404:
+          case Status.NOTFOUND:
             setInput((prevState) => ({
               ...prevState,
               email: { value: input.email.value, status: Status.NOTFOUND },
             }))
             break
-          case 401:
+          case Status.FORBIDDEN:
             setInput((prevState) => ({
               ...prevState,
               password: { value: input.password.value, status: Status.FORBIDDEN },

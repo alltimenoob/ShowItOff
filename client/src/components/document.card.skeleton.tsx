@@ -3,12 +3,12 @@ export default function DocumentCardSkeleton() {
       <form
         className='rounded-md rounded-b-none max-w-full max-h-full h-full w-full mt-10 flex flex-col text-sm text-clip text-black bg-gray-50 select-none overflow-hidden border '
       >
-        <div className='flex-1 overflow-hidden relative'>
+        <div className='flex-1 overflow-hidden '>
           <img
-            className='object-cover w-full rounded rounded-b-none h-full animate-[pulse_1s_linear_infinite] bg-gray-300 hover:opacity-50 cursor-pointer'
+            className='object-cover w-full h-full rounded rounded-b-none  animate-[pulse_1s_linear_infinite] bg-gray-300 '
             src={"//:0"}
-            onError={(event: any) => {
-                event.target.src = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'></svg>`
+            onError={(event: React.BaseSyntheticEvent) => {
+                event.target.src = `data:image/svg+xml;utf8,<svg width='500px' height='500px' xmlns='http://www.w3.org/2000/svg'></svg>`
               }}
           />
         </div>

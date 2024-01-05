@@ -11,14 +11,27 @@ export default function DocumentCard({ document }: { document: Document }) {
   const menuContext = useContext(MenuContext)
   if (menuContext == null) return
 
-  const { openMenu, setOpenMenu, setSharePopup } = menuContext
+  const { openMenu, setOpenMenu, setMenuItem } = menuContext
 
-  const handleShare = (menuItem: MenuItems) => (_: any) => {
-    if (menuItem == MenuItems.Share) setSharePopup(true)
+  const handleMenuClick = (currentMenuItem: MenuItems) => () => {
+    if (currentMenuItem == MenuItems.Share) setMenuItem((prevState)=> {
+      return {...prevState,share:true}
+    })
+    if (currentMenuItem == MenuItems.Delete) setMenuItem((prevState)=> {
+      return {...prevState,delete:true}
+    })
+    if (currentMenuItem == MenuItems.Edit) setMenuItem((prevState)=> {
+      return {...prevState,edit:true}
+    })
   }
 
-  const handleLoadPopup = (document: Document) => (_: any) => {
-    if (openMenu && openMenu.title == document.title) setOpenMenu(undefined)
+  const handleLoadPopup = (document: Document) => () => {
+    if (openMenu && openMenu.title == document.title) setOpenMenu({
+      id: '',
+      title : '', 
+      preview : '',
+      filename : ''
+    })
     else setOpenMenu(document)
   }
 
@@ -34,7 +47,7 @@ export default function DocumentCard({ document }: { document: Document }) {
           }
            cursor-pointer`}
           src={document.preview}
-          onError={(event: any) => {
+          onError={(event: React.BaseSyntheticEvent) => {
             event.target.src = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'></svg>`
           }}
         />
@@ -49,7 +62,7 @@ export default function DocumentCard({ document }: { document: Document }) {
               src={MenuItems[menuItem]}
               key={index}
               className='m-auto p-3 object-contain border-b hover:bg-blue-300 rounded-[5rem] cursor-pointer text-black text-base bg-blue-100 '
-              onClick={handleShare(MenuItems[menuItem])}
+              onClick={handleMenuClick(MenuItems[menuItem])}
             />
           ))}
         </div>

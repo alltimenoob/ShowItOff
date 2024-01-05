@@ -26,7 +26,7 @@ const getFileSize: (size: number) => string = (size: number) => {
   return size + " Bytes"
 }
 
-const getImageOfDom = (ref: any) => {
+const getImageOfDom = (ref: { current : HTMLElement }) => {
   return DomToImage.toPng(ref.current)
     .then(function (dataUrl) {
       return dataUrl
@@ -72,7 +72,7 @@ export default function UploadDocument() {
     if (!preview || !title || !filename || !email) return setError("Something went wrong!")
 
     axios
-      .post("/api/upload", formData, {
+      .put("/api/document", formData, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
           "Content-Type": "multipart/form-data",

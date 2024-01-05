@@ -1,4 +1,4 @@
-import { Request, Response, response } from "express"
+import { Request, Response } from "express"
 import { register } from "./authentication/auth.register"
 import { login } from "./authentication/auth.login"
 import { startMongoose } from "./mongoose/mongoose.config"
@@ -7,6 +7,7 @@ import upload from "./filehandling/upload.instance"
 import { createDocument } from "./document/document.server"
 import "./graphql/graphql.server"
 import shareDocument from "./mailer/share.document"
+import { documentModel } from "./mongoose/mongoose.model"
 
 const express = require("express")
 const app = express()
@@ -47,7 +48,7 @@ app.post("/login", (req: Request, res: Response) => {
   })
 })
 
-app.post("/upload", [validateJWT, upload.single("file")], async (req: any, res: Response) => {
+app.put("/document", [validateJWT, upload.single("file")], async (req: any, res: Response) => {
   await createDocument({
     email: req.user.email,
     title: req.body.title,
@@ -71,8 +72,16 @@ app.post("/share", validateJWT, async (req: Request, res: Response) => {
     id: req.body.id,
     recipient: req.body.recipient,
   })
-    
+
   res.status(200).send(message)
+})
+
+app.delete("/document/:id",async (req : Request , res : Response) => {
+  const result = await documentModel.deleteOne({_id : req.params.id})
+  if(result.acknowledged && result.deletedCount)
+    res.send({msg : 'Document deleted successfully', status : 200})
+  else  
+    res.send({msg : 'Something went wrong!', status : 400})
 })
 
 const port = process.env.PORT

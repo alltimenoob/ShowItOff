@@ -10,7 +10,7 @@ const callValidate = async () => {
     })
 }
 
-export default function(){
+export default function PrivateRoutes(){
     const [isLoggedIn , setIsLoggedIn] = useState(true)
     const [isValidated,setIsValidated] = useState(false)
     

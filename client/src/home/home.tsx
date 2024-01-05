@@ -3,6 +3,7 @@ import { gql, useQuery } from "@apollo/client"
 import DocumentGrid from "../components/document.grid."
 import { Dispatch, SetStateAction, createContext, useEffect, useState } from "react"
 import ShareDocument from "../components/share.document"
+import DeleteDocument from "../components/delete.document"
 
 const GET_DOCUMENTS = gql`
   query GetDocuments($email: String) {
@@ -22,10 +23,16 @@ export type Document = {
 }
 
 type MenuContextType = {
-  openMenu: Document | undefined
-  setOpenMenu: Dispatch<SetStateAction<Document | undefined>>
-  sharePopup: boolean
-  setSharePopup: Dispatch<SetStateAction<boolean>>
+  openMenu: Document 
+  setOpenMenu: Dispatch<SetStateAction<Document >>
+  menuItem: MenuItemType 
+  setMenuItem: Dispatch<SetStateAction<MenuItemType>>
+}
+
+type MenuItemType = {
+  share : boolean
+  delete : boolean
+  edit : boolean
 }
 
 const MenuContext = createContext<MenuContextType | null>(null)
@@ -33,8 +40,14 @@ export { MenuContext }
 
 export default function Home() {
   const navigate = useNavigate()
-  const [openMenu, setOpenMenu] = useState<Document | undefined>(undefined)
-  const [sharePopup, setSharePopup] = useState<boolean>(false)
+
+  const [openMenu, setOpenMenu] = useState<Document>()
+
+  const [menuItem, setMenuItem] = useState<MenuItemType>({
+    share : false,
+    delete : false,
+    edit : false
+  })
 
   const { loading, error, data, refetch } = useQuery(GET_DOCUMENTS, {
     variables: { email: localStorage.getItem("email") as string },
@@ -47,7 +60,7 @@ export default function Home() {
 
   useEffect(() => {
     if (data != null) refetch()
-  }, [])
+  })
 
   return (
     <div className='lg:text-3xl text-xl lg:p-10 p-5 w-full font-mono font-bold text-blue-400 '>
@@ -78,9 +91,10 @@ export default function Home() {
       </form>
 
       <section className='grid lg:grid-cols-8 md:grid-cols-6 sm:grid-cols-4 grid-cols-2 justify-items-center items-center gap-3 min-w-[300px]'>
-        <MenuContext.Provider value={{ openMenu, setOpenMenu, sharePopup, setSharePopup }}>
+        <MenuContext.Provider value={{ openMenu, setOpenMenu, menuItem, setMenuItem }}>
           {<DocumentGrid loading={loading} error={error} data={data} />}
           <ShareDocument />
+          <DeleteDocument />
         </MenuContext.Provider>
       </section>
     </div>

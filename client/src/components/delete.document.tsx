@@ -5,15 +5,15 @@ import FloatingLabel from "./floatinglabel"
 
 enum Status {
   ERROR = 400,
-  SENT = 200,
+  DELETED = 200,
   WAITING = 1,
   IDLE = 0,
 }
-const AntiDetectionID = "no-detect-share-document"
 
-export default function ShareDocument() {
+const AntiDetectionID = "no-detect-delete-document"
+
+export default function DeleteDocument() {
   const menuContext = useContext(MenuContext)
-  const [recipient, setRecipient] = useState<string>("")
   const [response, setResponse] = useState<{ msg: string; status: Status }>({
     msg: "",
     status: Status.IDLE,
@@ -25,55 +25,47 @@ export default function ShareDocument() {
   const handleLoadPopup = (event: React.SyntheticEvent) => {
     if ((event.target as HTMLElement).id !== AntiDetectionID) {
       setMenuItem((prevState) => {
-        return { ...prevState, share: false }
+        return { ...prevState, delete: false }
       })
     }
   }
 
-  const handleShare = () => {
-
+  const handleDelete = () => {
     setResponse({ msg: "Wait", status: Status.WAITING })
+    console.log(openMenu)
+    const id = openMenu.id
+    const token = localStorage.getItem("token")
 
-    axios
-      .post(
-        "/api/share",
-        {
-          id: openMenu.id,
-          recipient: recipient,
-        },
-        {
-          headers: {
-            authorization: "Bearer " + localStorage.getItem("token"),
-          },
-          timeout : 20000
+    axios.delete(`/api/document/${id}`, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    }).then((response : AxiosResponse) => {
+        if(response.data.status == Status.ERROR){
+            setResponse(response.data)
+            return setTimeout(
+              () => setResponse({ msg: "", status: Status.IDLE }),
+              2000
+            )
         }
-      )
-      .then((response: AxiosResponse) => {
-        if (response && response.data.status == Status.ERROR) {
-          setResponse(response.data)
-          return setTimeout(
-            () => setResponse({ msg: "", status: Status.IDLE }),
-            2000
-          )
-        }
-        else if (response && response.data.status == Status.SENT) {
-          setResponse(response.data)
+        else if(response.data.status == Status.DELETED){
+            setResponse(response.data)
           return setTimeout(() => {
             setResponse({ msg: "", status: Status.IDLE })
             setMenuItem((prevState) => {
-              return { ...prevState, share: false }
+              return { ...prevState, delete: false }
             })
           }, 2000)
         }
 
         setResponse({ msg: "Something went wrong", status: Status.ERROR })
         setTimeout(() => setResponse({ msg: "", status: Status.ERROR }), 2000)
-      })
+    })
   }
 
   return (
     <>
-      {menuItem.share && (
+      {menuItem.delete && (
         <div
           className='text-base fixed top-0 bg-black bg-opacity-50 w-screen h-screen flex items-center justify-center border'
           onClick={handleLoadPopup}
@@ -82,30 +74,28 @@ export default function ShareDocument() {
             id={AntiDetectionID}
             className='bg-gray-50 p-5 md:w-2/6 w-4/5 rounded flex flex-col'
           >
-            <input
+            <p
               id={AntiDetectionID}
-              className={`rounded p-3 m-1 border-2 border-blue-400 text-black`}
-              type='email'
-              name='email'
-              placeholder='Recipient Email'
-              onChange={(event) => setRecipient(event.target.value)}
-            />
+              className={`rounded p-3 m-1  text-red-400 text-2xl`}
+            >
+              {`Deleting ${openMenu.title}!`}
+            </p>
             <button
               id={AntiDetectionID}
               className={`hover:opacity-80 cursor-pointer text-white p-3 m-1 rounded ${
-                response.status == Status.SENT
+                response.status == Status.DELETED
                   ? "bg-green-400"
                   : response.status == Status.WAITING
-                  ? "cursor-wait bg-blue-400"
-                  : "bg-blue-400"
+                  ? "cursor-wait bg-red-400"
+                  : "bg-red-400"
               } `}
-              onClick={handleShare}
+              onClick={handleDelete}
             >
               {Status.WAITING == response.status
                 ? "Wait"
-                : Status.SENT == response.status
-                ? "Sent ✅"
-                : "Send"}
+                : Status.DELETED == response.status
+                ? "Deleted ✅"
+                : "Confirm"}
             </button>
           </div>
         </div>
