@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { validateEmail, validatePassword } from "./validate.user"
 import axios, { AxiosError, AxiosResponse } from "axios"
-import FloatingLabel from "../components/floatinglabel"
+import FloatingLabel from "../error/floatinglabel"
 
 interface LoginDetails {
   email: string

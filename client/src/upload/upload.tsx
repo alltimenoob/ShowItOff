@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react"
 import { Document, Page } from "react-pdf"
-import FloatingLabel from "../components/floatinglabel"
+import FloatingLabel from "../error/floatinglabel"
 import DomToImage from "dom-to-image"
 import axios, { AxiosResponse } from "axios"
 import { useNavigate } from "react-router-dom"

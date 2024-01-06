@@ -1,7 +1,7 @@
 import { useContext, useState } from "react"
-import { MenuContext } from "../home/home"
+import { MenuContext } from "../home"
 import axios, { AxiosResponse } from "axios"
-import FloatingLabel from "./floatinglabel"
+import FloatingLabel from "../../error/floatinglabel"
 
 enum Status {
   ERROR = 400,

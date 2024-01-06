@@ -1,5 +1,5 @@
 import { ApolloError } from "@apollo/client"
-import { Document } from "../home/home"
+import { Document } from "../home"
 import DocumentCard from "./document.card"
 import DocumentCardSkeleton from "./document.card.skeleton"
 

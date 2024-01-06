@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom"
 import { gql, useQuery } from "@apollo/client"
-import DocumentGrid from "../components/document.grid."
+import DocumentGrid from "./components/document.grid."
 import { Dispatch, SetStateAction, createContext, useEffect, useState } from "react"
-import ShareDocument from "../components/share.document"
-import DeleteDocument from "../components/delete.document"
+import ShareDocument from "./components/share.document"
+import DeleteDocument from "./components/delete.document"
 
 const GET_DOCUMENTS = gql`
   query GetDocuments($email: String) {
@@ -41,7 +41,12 @@ export { MenuContext }
 export default function Home() {
   const navigate = useNavigate()
 
-  const [openMenu, setOpenMenu] = useState<Document>()
+  const [openMenu, setOpenMenu] = useState<Document>({
+    id: '',
+    title : '', 
+    preview : '',
+    filename : ''
+  })
 
   const [menuItem, setMenuItem] = useState<MenuItemType>({
     share : false,
@@ -72,7 +77,7 @@ export default function Home() {
         <a
           className='text-red-400 cursor-pointer'
           href='/'
-          onClick={(_) => {
+          onClick={() => {
             localStorage.clear()
           }}
         >

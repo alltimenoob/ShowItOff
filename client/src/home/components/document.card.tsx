@@ -1,5 +1,5 @@
 import { useContext } from "react"
-import { Document, MenuContext } from "../home/home"
+import { Document, MenuContext } from "../home"
 
 enum MenuItems {
   Edit = "/edit.png",
