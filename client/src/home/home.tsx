@@ -60,6 +60,7 @@ export default function Home() {
       headers: {
         authorization: localStorage.getItem("token"),
       },
+      timeout : 2000
     },
   })
 
@@ -70,10 +71,10 @@ export default function Home() {
   return (
     <div className='lg:text-3xl text-xl lg:p-10 p-5 w-full font-mono font-bold text-blue-400 '>
       <div
-        className='w-full flex justify-between select-none min-w-[300px]
+        className='w-full flex justify-between select-none min-w-[300px] 
       '
       >
-        <span>Welcome, {localStorage.getItem("name")} </span>
+        <span >Welcome, {localStorage.getItem("name")} </span>
         <a
           className='text-red-400 cursor-pointer'
           href='/'
@@ -86,13 +87,13 @@ export default function Home() {
       </div>
 
       <form
-        className={`mt-10 lg:w-40 lg:h-10 sm:h-10 sm:w-36 h-10 w-32 text-sm relative lg:justify-self-start xs:justify-self-center flex justify-center
-                    cursor-pointer items-center text-clip text-blue-400 bg-blue-100  select-none`}
+        className={`rounded-md mt-10 lg:w-40 lg:h-10 sm:h-10 sm:w-36 h-10 w-32 relative  lg:justify-self-start xs:justify-self-center flex justify-center
+                    cursor-pointer items-center text-clip text-blue-400 bg-blue-100 select-none shadow-md shadow-blue-200 hover:bg-blue-200 border border-blue-300`}
         encType='multipart/form-data'
         name='file'
         onClick={() => navigate("/upload")}
       >
-        <p className='block absolute xs:text-xs'>Upload Document</p>
+        <p className='block absolute xs:text-xs md:text-base'>Upload Document</p>
       </form>
 
       <section className='grid lg:grid-cols-8 md:grid-cols-6 sm:grid-cols-4 grid-cols-2 justify-items-center items-center gap-3 min-w-[300px]'>

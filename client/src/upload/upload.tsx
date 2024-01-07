@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react"
+import React, { SyntheticEvent, useRef, useState } from "react"
 import { Document, Page } from "react-pdf"
 import FloatingLabel from "../error/floatinglabel"
 import DomToImage from "dom-to-image"
@@ -26,8 +26,9 @@ const getFileSize: (size: number) => string = (size: number) => {
   return size + " Bytes"
 }
 
-const getImageOfDom = (ref: { current : HTMLElement }) => {
-  return DomToImage.toPng(ref.current)
+const getImageOfDom = (ref: HTMLElement | null ) => {
+  if(!ref) return console.error("oops, html error!")
+  return DomToImage.toPng(ref)
     .then(function (dataUrl) {
       return dataUrl
     })
@@ -57,7 +58,7 @@ export default function UploadDocument() {
   const handleUpload = async (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault()
     if (typeof file.fileObj != "object") return
-    const preview = await getImageOfDom(ref)
+    const preview = await getImageOfDom(ref.current)
     const title = input.title.value
     const filename = file.fileObj.name
     const email = localStorage.getItem("email")
@@ -89,17 +90,17 @@ export default function UploadDocument() {
       })
   }
 
-  const handleFile = (event: any) => {
-    console.log(event.target.files[0])
-    if (event.target.files.length < 1) return
+  const handleFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+    
+    if (!event.target.files) return
     if (
       FileReader &&
       (event.target.files[0].type == FileType.PNG || event.target.files[0].type == FileType.PDF) &&
       event.target.files[0].size < 1000000
     ) {
-      var fr = new FileReader()
+      const fr = new FileReader()
       fr.onload = function () {
-        if (fr.result)
+        if (fr.result && event.target.files)
           setFile({
             raw: fr.result.toString(),
             fileObj: event.target.files[0],
@@ -147,7 +148,7 @@ export default function UploadDocument() {
             </div>
             <div className='flex-1 flex justify-center items-center xs:w-full '>
               <label
-                className='relative text-center p-3 m-1 xs:w-full md:w-fit bg-blue-400 shadow-lg shadow-blue-100 text-white rounded '
+                className='relative text-center p-2 m-1 xs:w-full md:w-fit bg-blue-100 shadow-blue-200 shadow-md text-blue-400 rounded-md border border-blue-300 cursor-pointer text-base' 
                 htmlFor={"file"}
               >
                 Select Document

@@ -38,11 +38,11 @@ export default function DocumentCard({ document }: { document: Document }) {
   return (
     <form
       key={document.title}
-      className='rounded-md rounded-b-none max-w-full max-h-full h-full w-full mt-10 flex flex-col text-sm text-clip text-black  select-none overflow-hidden border '
+      className='rounded-md max-w-full max-h-full h-full w-full mt-10 flex flex-col text-sm text-clip text-black  select-none overflow-hidden border border-blue-100 shadow-blue-200 shadow-lg '
     >
-      <div className='flex-1 overflow-hidden relative'>
+      <div className='flex-1 overflow-hidden relative items-center justify-center'>
         <img
-          className={`object-cover w-full rounded rounded-b-none h-full bg-gray-300 ${
+          className={`object-cover w-full rounded rounded-b-none h-full bg-blue-300 ${
             openMenu && openMenu.title === document.title ? "" : "hover:opacity-50"
           }
            cursor-pointer`}
@@ -61,7 +61,7 @@ export default function DocumentCard({ document }: { document: Document }) {
             <img
               src={MenuItems[menuItem]}
               key={index}
-              className='m-auto p-3 object-contain border-b hover:bg-blue-300 rounded-[5rem] cursor-pointer text-black text-base bg-blue-100 '
+              className='m-auto p-3 object-contain border-b hover:bg-blue-300 rounded-[5rem] cursor-pointer text-black text-base bg-blue-100 shadow-md '
               onClick={handleMenuClick(MenuItems[menuItem])}
             />
           ))}
@@ -70,14 +70,14 @@ export default function DocumentCard({ document }: { document: Document }) {
 
       <div className={`flex-2 flex justify-between items-center`}>
         <span
-          className={`rounded rounded-b-none w-full overflow-hidden p-2 text-ellipsis whitespace-nowrap cursor-pointer hover:bg-gray-100 
-           border-gray-400`}
+          className={`rounded rounded-b-none w-full overflow-hidden p-2 text-ellipsis whitespace-nowrap cursor-pointer hover:bg-blue-50 
+           border-blue-400`}
         >
           {document.title} 
         </span>
 
         <span
-          className={`p-2 self-end cursor-pointer border-l  hover:bg-gray-100 `}
+          className={`p-2 self-end cursor-pointer border-l  hover:bg-blue-50 `}
           onClick={handleLoadPopup(document)}
         >
           :

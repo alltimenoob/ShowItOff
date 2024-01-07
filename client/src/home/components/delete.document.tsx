@@ -1,6 +1,6 @@
 import { useContext, useState } from "react"
 import { MenuContext } from "../home"
-import axios, { AxiosResponse } from "axios"
+import axios, { AxiosError, AxiosResponse } from "axios"
 import FloatingLabel from "../../error/floatinglabel"
 
 enum Status {
@@ -40,6 +40,7 @@ export default function DeleteDocument() {
       headers: {
         Authorization: "Bearer " + token,
       },
+      timeout: 20000,
     }).then((response : AxiosResponse) => {
         if(response.data.status == Status.ERROR){
             setResponse(response.data)
@@ -55,10 +56,13 @@ export default function DeleteDocument() {
             setMenuItem((prevState) => {
               return { ...prevState, delete: false }
             })
-          }, 2000)
+          }, 1000)
         }
 
         setResponse({ msg: "Something went wrong", status: Status.ERROR })
+        setTimeout(() => setResponse({ msg: "", status: Status.ERROR }), 2000)
+    }).catch((error : AxiosError)=>{
+        setResponse({ msg: error.message , status: Status.ERROR })
         setTimeout(() => setResponse({ msg: "", status: Status.ERROR }), 2000)
     })
   }
@@ -84,7 +88,7 @@ export default function DeleteDocument() {
               id={AntiDetectionID}
               className={`hover:opacity-80 cursor-pointer text-white p-3 m-1 rounded ${
                 response.status == Status.DELETED
-                  ? "bg-green-400"
+                  ? "bg-red-400"
                   : response.status == Status.WAITING
                   ? "cursor-wait bg-red-400"
                   : "bg-red-400"

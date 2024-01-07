@@ -4,7 +4,7 @@ import { login } from "./authentication/auth.login"
 import { startMongoose } from "./mongoose/mongoose.config"
 import { validateJWT } from "./authentication/jwt.validate"
 import upload from "./filehandling/upload.instance"
-import { createDocument } from "./document/document.server"
+import { createDocument, deleteDocument } from "./document/document.server"
 import "./graphql/graphql.server"
 import shareDocument from "./mailer/share.document"
 import { documentModel } from "./mongoose/mongoose.model"
@@ -77,11 +77,13 @@ app.post("/share", validateJWT, async (req: Request, res: Response) => {
 })
 
 app.delete("/document/:id",async (req : Request , res : Response) => {
-  const result = await documentModel.deleteOne({_id : req.params.id})
-  if(result.acknowledged && result.deletedCount)
-    res.send({msg : 'Document deleted successfully', status : 200})
-  else  
-    res.send({msg : 'Something went wrong!', status : 400})
+  if(req.params && req.params.id){
+    const result = await deleteDocument(req.params.id)
+    res.send(result)
+  }
+  else{
+    res.send({msg:"Incorrect request.",status : 400})
+  }
 })
 
 const port = process.env.PORT

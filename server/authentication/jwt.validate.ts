@@ -1,21 +1,23 @@
-import jwt from 'jsonwebtoken'
-import { NextFunction, Request, Response } from 'express';
+import jwt, { JwtPayload } from 'jsonwebtoken'
+import { NextFunction , Request, Response } from 'express';
 
-export function validateJWT( req : any, res : Response, next : NextFunction) {
+interface CustomRequest extends Request{
+  user : JwtPayload | string
+}
+export function validateJWT( req : CustomRequest, res : Response, next : NextFunction) {
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(' ')[1]
     if(token == null) return res.sendStatus(401)
     
 
-    jwt.verify(token, process.env.TOKEN_SECRET as string, (err: any, user: any) => {
+    jwt.verify(token, process.env.TOKEN_SECRET as string, (error, user) => {
 
-        if (err) {
-          console.log(err)
-          return res.sendStatus(403)
+        if (error) {
+          console.log(error.name)
+          res.sendStatus(403)
         } 
 
-        console.log("Valid JWT ",user)
-        
+        if(user)
         req.user = user
     
         next()
